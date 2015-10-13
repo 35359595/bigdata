@@ -12,11 +12,6 @@ fn main() {
 	let mut y6: Vec<Vec<String>> = vec![];
 	let mut els: Vec<Vec<String>> = vec![];
 	
-	let mut p1: Vec<String> = vec![];
-	let mut p2: Vec<String> = vec![];
-
-	let mut d0: Vec<String> = vec![];
-
 	let mut train = csv::Reader::from_file("./data/train.csv").unwrap();
 	for train_record in train.decode() {
 		let s1: Vec<String> = train_record.unwrap();
@@ -33,15 +28,36 @@ fn main() {
 
 	println!("0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, else: {}", y0.len(), y1.len(), y2.len(), y3.len(), y4.len(), y5.len(), y6.len(), els.len());
 	
-	p1 = find_uniq(y0, 14);
-	for p in &p1 { println!("Uniq: {}", p); }
+
+//All must be mutable to remove matches...
+
+	let mut p0: Vec<String> = find_uniq(y0, 1);
+	for p in &p0 { println!("Row {} Uniq0: {}", 1, p); }
 	
-	p2 = find_uniq(y1, 14);
-	for p in &p2 { println!("Uniq2: {}", p); }
+	let mut p1: Vec<String> = find_uniq(y1, 1);
+	for p in &p1 { println!("Row {} Uniq1: {}", 1, p); }
 
-	d0 = find_same(p1, p2);
-	for d in &d0 { println!("Same: {}", d); }
+	let mut p2: Vec<String> = find_uniq(y2, 1);
+	for p in &p2 { println!("Row {} Uniq2: {}", 1, p); }
+	
+	let mut p3: Vec<String> = find_uniq(y3, 1);
+	for p in &p3 { println!("Row {} Uniq3: {}", 1, p); }
 
+	let mut p4: Vec<String> = find_uniq(y4, 1);
+	
+	let mut p5: Vec<String> = find_uniq(y5, 1);
+
+	let mut p6: Vec<String> = find_uniq(y6, 1);
+
+	let mut d0: Vec<String> = find_same(&p0, &p1);
+	for d in &d0 { println!("Same in p0 & p1: {}", d); }
+
+	let mut d1: Vec<String> = find_same(&p2, &p3);
+	for d in &d1 { println!("Same in p2 & p3: {}", d); }
+
+	let d2: Vec<String> = find_same(&p0, &p2);
+	for d in &d2 { println!("Same in p0 & p2: {}", d); }
+	
 	//interesting part
 	if els.len() != 0 {panic!("Parse went wrong! els is not epmty!")} //if parse of test was not complete as expected
 	
@@ -68,10 +84,10 @@ fn find_uniq(v: Vec<Vec<String>>, i: usize) -> Vec<String> {
 	return ret
 }
 
-fn find_same(v1: Vec<String>, v2: Vec<String>) -> Vec<String> {
+fn find_same(v1: &Vec<String>, v2: &Vec<String>) -> Vec<String> {
 	let mut ret: Vec<String> = vec![];
-	for var1 in &v1 {
-		for var2 in &v2 {
+	for var1 in v1 {
+		for var2 in v2 {
 			if var1 == var2 { &ret.push(var1.to_string()); }
 		}
 	}
