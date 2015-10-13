@@ -5,4 +5,3 @@ authors = ["35359595 <35359595i@gmail.com>"]
 
 [dependencies]
 csv = "*"
-rustc-serialize = "*"

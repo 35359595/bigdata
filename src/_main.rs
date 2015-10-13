@@ -2,8 +2,7 @@ extern crate csv;
 
 fn main() {
 	let mut rdr = csv::Reader::from_file("./data/train.csv").unwrap();
-	for record in rdr.decode() {
-		let (s1): (String) = record.unwrap();
-		println!("{}", s1);
+	for row in rdr.byte_records().map(|r| r.unwrap()) {
+    		println!("{:?}", row.y);
 	}
-}
+}	
