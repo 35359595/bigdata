@@ -27,8 +27,3 @@ fn main() {
 	}
 	println!("0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, else: {}", y0.len(), y1.len(), y2.len(), y3.len(), y4.len(), y5.len(), y6.len(), els.len());
 }
-
-fn compare(s: String, l: String) -> bool {
-	if s.as_slice() == l.as_slice() { return true}
-	else { return false }
-}	
