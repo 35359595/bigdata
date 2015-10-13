@@ -13,6 +13,9 @@ fn main() {
 	let mut els: Vec<Vec<String>> = vec![];
 	
 	let mut p1: Vec<String> = vec![];
+	let mut p2: Vec<String> = vec![];
+
+	let mut d0: Vec<String> = vec![];
 
 	let mut train = csv::Reader::from_file("./data/train.csv").unwrap();
 	for train_record in train.decode() {
@@ -30,9 +33,15 @@ fn main() {
 
 	println!("0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, else: {}", y0.len(), y1.len(), y2.len(), y3.len(), y4.len(), y5.len(), y6.len(), els.len());
 	
-	p1 = find_uniq(y0, 2);
-	for p in p1 { println!("Uniq in a row {}", p); }
+	p1 = find_uniq(y0, 14);
+	for p in &p1 { println!("Uniq: {}", p); }
 	
+	p2 = find_uniq(y1, 14);
+	for p in &p2 { println!("Uniq2: {}", p); }
+
+	d0 = find_same(p1, p2);
+	for d in &d0 { println!("Same: {}", d); }
+
 	//interesting part
 	if els.len() != 0 {panic!("Parse went wrong! els is not epmty!")} //if parse of test was not complete as expected
 	
@@ -58,3 +67,13 @@ fn find_uniq(v: Vec<Vec<String>>, i: usize) -> Vec<String> {
 	}
 	return ret
 }
+
+fn find_same(v1: Vec<String>, v2: Vec<String>) -> Vec<String> {
+	let mut ret: Vec<String> = vec![];
+	for var1 in &v1 {
+		for var2 in &v2 {
+			if var1 == var2 { &ret.push(var1.to_string()); }
+		}
+	}
+	return ret
+}	
