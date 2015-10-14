@@ -1,65 +1,59 @@
-//9, 14, 24-61
-
 extern crate csv;
 
+struct All {
+	y0: Vec<Vec<String>>,
+	y1: Vec<Vec<String>>,
+	y2: Vec<Vec<String>>,
+	y3: Vec<Vec<String>>,
+	y4: Vec<Vec<String>>,
+	y5: Vec<Vec<String>>,
+	y6: Vec<Vec<String>>,
+	els: Vec<Vec<String>>,
+}
+
+struct Uniq {
+	p0: Vec<String>,
+	p1: Vec<String>,
+	p2: Vec<String>,
+	p3: Vec<String>,
+	p4: Vec<String>,
+	p5: Vec<String>,
+	p6: Vec<String>,
+}
+
 fn main() {
-	let mut y0: Vec<Vec<String>> = vec![];
-	let mut y1: Vec<Vec<String>> = vec![];
-	let mut y2: Vec<Vec<String>> = vec![];
-	let mut y3: Vec<Vec<String>> = vec![];
-	let mut y4: Vec<Vec<String>> = vec![];
-	let mut y5: Vec<Vec<String>> = vec![];
-	let mut y6: Vec<Vec<String>> = vec![];
-	let mut els: Vec<Vec<String>> = vec![];
-	
+	let mut all = All {y0: vec![], y1: vec![], y2: vec![], y3: vec![], y4: vec![], y5: vec![], y6: vec![], els: vec![]};
+	let mut uniq = Uniq {p0: vec![], p1: vec![], p2: vec![], p3: vec![], p4: vec![], p5: vec![], p6: vec![]};
+
 	let mut train = csv::Reader::from_file("./data/train.csv").unwrap();
 	for train_record in train.decode() {
 		let s1: Vec<String> = train_record.unwrap();
-
-		if s1[62] == "0" { &y0.push(s1); }
-		else if s1[62] == "1" { &y1.push(s1); }
-		else if s1[62] == "2" { &y2.push(s1); }
-		else if s1[62] == "3" { &y3.push(s1); }
-		else if s1[62] == "4" { &y4.push(s1); }
-		else if s1[62] == "5" { &y5.push(s1); }
-		else if s1[62] == "6" { &y6.push(s1); }
-		else { &els.push(s1); }
+			if s1[62] == "0" { &all.y0.push(s1); }
+			else if s1[62] == "1" { &all.y1.push(s1); }
+			else if s1[62] == "2" { &all.y2.push(s1); }
+			else if s1[62] == "3" { &all.y3.push(s1); }
+			else if s1[62] == "4" { &all.y4.push(s1); }
+			else if s1[62] == "5" { &all.y5.push(s1); }
+			else if s1[62] == "6" { &all.y6.push(s1); }
+			else { &all.els.push(s1); }
+		
 	}
 
-	println!("0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, else: {}", y0.len(), y1.len(), y2.len(), y3.len(), y4.len(), y5.len(), y6.len(), els.len());
+	println!("0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, else: {}", all.y0.len(), all.y1.len(), all.y2.len(), all.y3.len(), all.y4.len(), all.y5.len(), all.y6.len(), all.els.len());
 	
+	//All must be mutable to remove matches...
 
-//All must be mutable to remove matches...
+	uniq.p0 = find_uniq(all.y0);
+	uniq.p1 = find_uniq(all.y1);
+	uniq.p2 = find_uniq(all.y2);
+	uniq.p3 = find_uniq(all.y3);
+	uniq.p4 = find_uniq(all.y4);
+	uniq.p5 = find_uniq(all.y5);
+	uniq.p6 = find_uniq(all.y6);
+//	for p in uniq.p0 { println!("Uniq 0: {}", p); }
 
-	let mut p0: Vec<String> = find_uniq(y0, 1);
-	for p in &p0 { println!("Row {} Uniq0: {}", 1, p); }
-	
-	let mut p1: Vec<String> = find_uniq(y1, 1);
-	for p in &p1 { println!("Row {} Uniq1: {}", 1, p); }
-
-	let mut p2: Vec<String> = find_uniq(y2, 1);
-	for p in &p2 { println!("Row {} Uniq2: {}", 1, p); }
-	
-	let mut p3: Vec<String> = find_uniq(y3, 1);
-	for p in &p3 { println!("Row {} Uniq3: {}", 1, p); }
-
-	let mut p4: Vec<String> = find_uniq(y4, 1);
-	
-	let mut p5: Vec<String> = find_uniq(y5, 1);
-
-	let mut p6: Vec<String> = find_uniq(y6, 1);
-
-	let mut d0: Vec<String> = find_same(&p0, &p1);
-	for d in &d0 { println!("Same in p0 & p1: {}", d); }
-
-	let mut d1: Vec<String> = find_same(&p2, &p3);
-	for d in &d1 { println!("Same in p2 & p3: {}", d); }
-
-	let d2: Vec<String> = find_same(&p0, &p2);
-	for d in &d2 { println!("Same in p0 & p2: {}", d); }
-	
 	//interesting part
-	if els.len() != 0 {panic!("Parse went wrong! els is not epmty!")} //if parse of test was not complete as expected
+	if all.els.len() != 0 {panic!("Parse went wrong! els is not epmty!")} //if parse of test was not complete as expected
 	
 	//writing results
 //	let mut writer = csv::Writer::from_file("./data/y0.csv").unwrap();
@@ -71,8 +65,9 @@ fn main() {
 	
 }
 
-fn find_uniq(v: Vec<Vec<String>>, i: usize) -> Vec<String> {
+fn find_uniq(v: Vec<Vec<String>>) -> Vec<String> {
 	let mut ret: Vec<String> = vec![];
+	for i in 0..62 {
 	for var in &v {
 		let mut check = false;
 		let st1: &String = &var[i];
@@ -80,6 +75,7 @@ fn find_uniq(v: Vec<Vec<String>>, i: usize) -> Vec<String> {
 			if r == st1 { check = true; }
 		}
 		if ! check { &ret.push(st1.to_string()); }
+	}
 	}
 	return ret
 }
