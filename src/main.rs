@@ -2,8 +2,8 @@ extern crate csv;
 
 use std::collections::HashSet;
 use std::fs::{File, OpenOptions};
-use std::io::BufWriter;
-use std::io::prelude::*;
+use std::io::{BufWriter, Write};
+//use std::io::prelude::*;
 use std::path::Path;
 
 struct All {
@@ -86,7 +86,7 @@ fn find_uniq(v: Vec<Vec<String>>) -> Vec<String> {
 	v.into_iter().flat_map(|v| v).collect::<HashSet<String>>().into_iter().collect()
 }
 
-fn write_to_file(s: &str) {
+fn write_to_file(s: String) {
 	let path = Path::new("./data/sol.csv");
 	let mut options = OpenOptions::new();
 		options.write(true).append(true);
@@ -96,6 +96,8 @@ fn write_to_file(s: &str) {
 	};
 	let mut writer = BufWriter::new(&file);
 		writer.write(s.as_bytes());
+	
+	
 	
 }
 
@@ -154,10 +156,10 @@ fn build_rating(uniq: &Uniq) {
 			let sting: &String = &test_row[0].to_string();
 			println!("{}, {}", &sting, &decision);
 		let mut out = String::new();
+		out.push_str("\n");
 		out.push_str(&sting.to_string());
 		out.push_str(",");
 		out.push_str(&decision.to_string());		
-		println!("{}", &out);
 		write_to_file(out);
 		}
 }
