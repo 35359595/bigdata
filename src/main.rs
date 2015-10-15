@@ -1,6 +1,10 @@
 extern crate csv;
 
 use std::collections::HashSet;
+use std::fs::{File, OpenOptions};
+use std::io::BufWriter;
+use std::io::prelude::*;
+use std::path::Path;
 
 struct All {
 	y0: Vec<Vec<String>>,
@@ -72,14 +76,9 @@ fn main() {
 
 	//interesting part
 	if all.els.len() != 0 {panic!("Parse went wrong! els is not epmty!")} //if parse of test was not complete as expected
+	
+	//populating results
 	build_rating(&uniq);
-	//writing results
-//	let mut writer = csv::Writer::from_file("./data/y0.csv").unwrap();
-//		for y00 in y0 {
-//			writer.encode(y00).ok().expect("CSV Writer error.");
-//		}
-
-//	let mut test = csv::Reader::from_file("./data/test.csv").unwrap(); //loadint work data
 	
 }
 
@@ -87,8 +86,21 @@ fn find_uniq(v: Vec<Vec<String>>) -> Vec<String> {
 	v.into_iter().flat_map(|v| v).collect::<HashSet<String>>().into_iter().collect()
 }
 
+fn write_to_file(s: &str) {
+	let path = Path::new("./data/sol.csv");
+	let mut options = OpenOptions::new();
+		options.write(true).append(true);
+	let file = match options.open(&path) {
+  		Ok(file) => file,
+    		Err(e) => panic!("Error: {}", e),
+	};
+	let mut writer = BufWriter::new(&file);
+		writer.write(s.as_bytes());
+	
+}
+
 fn build_rating(uniq: &Uniq) {
-	println!("building rationgs and printing results:\n");
+	println!("Building ratings and printing results:\n");
 	println!("ID, y");
 	let mut test = csv::Reader::from_file("./data/test.csv").unwrap();
 		for test_rows in test.decode() {
@@ -140,6 +152,12 @@ fn build_rating(uniq: &Uniq) {
 			else if rate.c5 > rate.c6 { decision = 5 }
 			else { decision = 6 }
 			let sting: &String = &test_row[0].to_string();
-			println!("{}, {}", sting, decision);
+			println!("{}, {}", &sting, &decision);
+		let mut out = String::new();
+		out.push_str(&sting.to_string());
+		out.push_str(",");
+		out.push_str(&decision.to_string());		
+		println!("{}", &out);
+		write_to_file(out);
 		}
 }
