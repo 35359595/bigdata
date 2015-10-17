@@ -6,9 +6,6 @@ use std::collections::HashSet;
 use std::fs::{File, OpenOptions};
 use std::io::{BufWriter, Write};
 use std::path::Path;
-use std::thread;
-use std::sync::{Arc, Mutex};
-//use std::sync::mpsc::channel;
 
 struct All {
 	y0: Vec<Vec<String>>,
@@ -39,24 +36,6 @@ struct RCounter {
 	c4: i32,
 	c5: i32,
 	c6: i32,
-}
-
-impl Uniq {
-	fn seek(self, input: &String) -> i32 {
-		let mut count: i32 = 0;
-		let thread: Vec<_> = self.p0.into_iter().map(|p| {
-			let input = input.clone();
-			thread::spawn(move || {
-				if p == input {
-					count += 1;
-				}
-			})
-		}).collect();
-		
-		for t in thread {t.join().unwrap()}
-		
-		return count
-	}
 }
 
 fn main() {
@@ -120,18 +99,50 @@ fn write_to_file(s: String) {
 	
 }
 
-fn build_rating(uniq_in: &Uniq) {
+fn build_rating(uniq: &Uniq) {
 	println!("Building ratings and printing results:\n");
 	println!("ID,y");
 	let mut test = csv::Reader::from_file("./data/test.csv").unwrap();
 		for test_rows in test.decode() {
 			let mut rate = RCounter {c0: 0,c1: 0,c2: 0,c3: 0,c4: 0,c5: 0,c6: 0};
 			let test_row: Vec<String> = test_rows.unwrap();
-				for test_string in &test_row {
-					let uniq = uniq_in.clone();
-					rate.c0 = uniq.seek(&test_string);
-					println!("{}", &rate.c0);
+			for test_string in &test_row {
+				for u in &uniq.p0 {
+					if test_string == &u.to_string() {
+						rate.c0 += 1;
+					}
 				}
+				for u in &uniq.p1 {
+					if test_string == &u.to_string() {
+						rate.c1 += 1;
+					}
+				}
+				for u in &uniq.p2 {
+					if test_string == &u.to_string() {
+						rate.c2 += 1;
+					}
+				}
+				for u in &uniq.p3 {
+					if test_string == &u.to_string() {
+						rate.c3 += 1;
+					}
+				}
+				for u in &uniq.p4 {
+					if test_string == &u.to_string() {
+						rate.c4 += 1;
+					}
+				}
+				for u in &uniq.p5 {
+					if test_string == &u.to_string() {
+						rate.c5 += 1;
+					}
+				}
+				for u in &uniq.p6 {
+					if test_string == &u.to_string() {
+						rate.c6 += 1;
+					}
+				}
+			}
 			let mut decision = 0;
 			if rate.c0 > rate.c1 { decision = 0 }
 			else if rate.c1 > rate.c2 { decision = 1 }
