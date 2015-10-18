@@ -20,7 +20,7 @@ struct All {
 	y6: Vec<Vec<String>>,
 	els: Vec<Vec<String>>,
 }
-
+#[derive(Clone)]
 struct Uniq {
 	p0: Vec<String>,
 	p1: Vec<String>,
@@ -42,21 +42,126 @@ struct RCounter {
 }
 
 impl Uniq {
-	fn seek(self, input: &String) -> i32 {
+	fn seek0(self, input: &String) -> i32 {
 		let mut count: i32 = 0;
 		let thread: Vec<_> = self.p0.into_iter().map(|p| {
 			let input = input.clone();
+			let mut count = count.clone();
 			thread::spawn(move || {
 				if p == input {
 					count += 1;
 				}
+				return count
 			})
 		}).collect();
-		
-		for t in thread {t.join().unwrap()}
-		
+
+		for t in thread { count += t.join().unwrap() }
+
 		return count
 	}
+	fn seek1(self, input: &String) -> i32 {
+		let mut count: i32 = 0;
+		let thread: Vec<_> = self.p1.into_iter().map(|p| {
+			let input = input.clone();
+			let mut count = count.clone();
+			thread::spawn(move || {
+				if p == input {
+					count += 1;
+				}
+				return count
+			})
+		}).collect();
+
+		for t in thread { count += t.join().unwrap() }
+
+		return count
+	}
+	fn seek2(self, input: &String) -> i32 {
+		let mut count: i32 = 0;
+		let thread: Vec<_> = self.p2.into_iter().map(|p| {
+			let input = input.clone();
+			let mut count = count.clone();
+			thread::spawn(move || {
+				if p == input {
+					count += 1;
+				}
+				return count
+			})
+		}).collect();
+
+		for t in thread { count += t.join().unwrap() }
+
+		return count
+	}
+	fn seek3(self, input: &String) -> i32 {
+		let mut count: i32 = 0;
+		let thread: Vec<_> = self.p3.into_iter().map(|p| {
+			let input = input.clone();
+			let mut count = count.clone();
+			thread::spawn(move || {
+				if p == input {
+					count += 1;
+				}
+				return count
+			})
+		}).collect();
+
+		for t in thread { count += t.join().unwrap() }
+
+		return count
+	}
+	fn seek4(self, input: &String) -> i32 {
+		let mut count: i32 = 0;
+		let thread: Vec<_> = self.p4.into_iter().map(|p| {
+			let input = input.clone();
+			let mut count = count.clone();
+			thread::spawn(move || {
+				if p == input {
+					count += 1;
+				}
+				return count
+			})
+		}).collect();
+
+		for t in thread { count += t.join().unwrap() }
+
+		return count
+	}
+	fn seek5(self, input: &String) -> i32 {
+		let mut count: i32 = 0;
+		let thread: Vec<_> = self.p5.into_iter().map(|p| {
+			let input = input.clone();
+			let mut count = count.clone();
+			thread::spawn(move || {
+				if p == input {
+					count += 1;
+				}
+				return count
+			})
+		}).collect();
+
+		for t in thread { count += t.join().unwrap() }
+
+		return count
+	}
+	fn seek6(self, input: &String) -> i32 {
+		let mut count: i32 = 0;
+		let thread: Vec<_> = self.p6.into_iter().map(|p| {
+			let input = input.clone();
+			let mut count = count.clone();
+			thread::spawn(move || {
+				if p == input {
+					count += 1;
+				}
+				return count
+			})
+		}).collect();
+
+		for t in thread { count += t.join().unwrap() }
+
+		return count
+	}
+
 }
 
 fn main() {
@@ -74,11 +179,11 @@ fn main() {
 			else if s1[62] == "5" { &all.y5.push(s1); }
 			else if s1[62] == "6" { &all.y6.push(s1); }
 			else { &all.els.push(s1); }
-		
+
 	}
 
 	println!("0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, else: {}", all.y0.len(), all.y1.len(), all.y2.len(), all.y3.len(), all.y4.len(), all.y5.len(), all.y6.len(), all.els.len());
-	
+
 	uniq.p0 = find_uniq(all.y0);
 	println!("15% done..");
 	uniq.p1 = find_uniq(all.y1);
@@ -95,10 +200,10 @@ fn main() {
 	println!("100% uniq search done!\n");
 
 	if all.els.len() != 0 {panic!("Parse went wrong! els is not epmty!")} //if parse of test was not complete as expected
-	
+
 	//populating results
 	build_rating(&uniq);
-	
+
 }
 
 fn find_uniq(v: Vec<Vec<String>>) -> Vec<String> {
@@ -115,9 +220,9 @@ fn write_to_file(s: String) {
 	};
 	let mut writer = BufWriter::new(&file);
 		writer.write(s.as_bytes());
-	
-	
-	
+
+
+
 }
 
 fn build_rating(uniq_in: &Uniq) {
@@ -127,11 +232,27 @@ fn build_rating(uniq_in: &Uniq) {
 		for test_rows in test.decode() {
 			let mut rate = RCounter {c0: 0,c1: 0,c2: 0,c3: 0,c4: 0,c5: 0,c6: 0};
 			let test_row: Vec<String> = test_rows.unwrap();
-				for test_string in &test_row {
-					let uniq = uniq_in.clone();
-					rate.c0 = uniq.seek(&test_string);
-					println!("{}", &rate.c0);
+				for test_string0 in &test_row {
+					let test_string = &test_string0;
+					let uniq0 = uniq_in.clone();
+					let uniq1 = uniq_in.clone();
+					let uniq2 = uniq_in.clone();
+					let uniq3 = uniq_in.clone();
+					let uniq4 = uniq_in.clone();
+					let uniq5 = uniq_in.clone();
+					let uniq6 = uniq_in.clone();
+
+					rate.c0 += uniq0.seek0(&test_string);
+					rate.c1 += uniq1.seek1(&test_string);
+					rate.c2 += uniq2.seek2(&test_string);
+					rate.c3 += uniq3.seek3(&test_string);
+					rate.c4 += uniq4.seek4(&test_string);
+					rate.c5 += uniq5.seek5(&test_string);
+					rate.c6 += uniq6.seek6(&test_string);
+
+					//println!("{}", &rate.c0);
 				}
+				println!("rate is: 0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}", &rate.c0, &rate.c1, &rate.c2, &rate.c3, &rate.c4, &rate.c5, &rate.c6);
 			let mut decision = 0;
 			if rate.c0 > rate.c1 { decision = 0 }
 			else if rate.c1 > rate.c2 { decision = 1 }
@@ -146,7 +267,7 @@ fn build_rating(uniq_in: &Uniq) {
 		out.push_str("\n");
 		out.push_str(&sting.to_string());
 		out.push_str(",");
-		out.push_str(&decision.to_string());		
+		out.push_str(&decision.to_string());
 		write_to_file(out);
 		}
 }
