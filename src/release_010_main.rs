@@ -144,14 +144,13 @@ fn build_rating(uniq: &Uniq) {
 				}
 			}
 			let mut decision = 0;
-			let mut tcomp = rate.c6;
-			for i in 0..5 {
-				for c in rate.into_iter() {
-					if c > tcomp { decision = i;
-						       tcomp = c    }
-				}
-			}
-			if tcomp == rate.c6 { decision = 6 }
+			if rate.c0 > rate.c1 { decision = 0 }
+			else if rate.c1 > rate.c2 { decision = 1 }
+			else if rate.c2 > rate.c3 { decision = 2 }
+			else if rate.c3 > rate.c4 { decision = 3 }
+			else if rate.c4 > rate.c5 { decision = 4 }
+			else if rate.c5 > rate.c6 { decision = 5 }
+			else { decision = 6 }
 			let sting: &String = &test_row[0].to_string();
 			println!("{}, {}", &sting, &decision);
 		let mut out = String::new();
